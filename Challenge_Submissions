@@ -1,0 +1,20 @@
+--Revising the Select Query I--
+SELECT *
+FROM CITY
+WHERE COUNTRYCODE = 'USA' AND POPULATION > 100000
+
+--Revising the Select Query II--
+SELECT name 
+FROM city 
+WHERE countrycode = 'USA' AND population > 120000
+
+--Select All--
+SELECT *
+FROM CITY
+
+--Select By ID--
+SELECT *
+FROM CITY
+WHERE ID = '1661'
+
+--
