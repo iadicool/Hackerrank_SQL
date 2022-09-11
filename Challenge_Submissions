@@ -17,4 +17,213 @@ SELECT *
 FROM CITY
 WHERE ID = '1661'
 
---
+--Japanese Cities' Attributes--
+SELECT * 
+FROM CITY 
+WHERE COUNTRYCODE = "JPN";
+
+--Japanese Cities' Names--
+SELECT NAME 
+FROM CITY 
+WHERE COUNTRYCODE = "JPN";
+
+--Weather Observation Station 1--
+SELECT CITY, STATE 
+FROM STATION;
+
+--Weather Observation Station 2--
+select round(sum(lat_n), 2), round(sum(long_w), 2) 
+from station;
+
+--Weather Observation Station 3--
+SELECT DISTINCT CITY
+FROM STATION
+WHERE ID%2=0;
+
+--Weather Observation Station 4--
+SELECT COUNT(*)- COUNT(DISTINCT CITY)
+FROM STATION;
+
+--Weather Observation Station 5--
+SELECT CITY, LENGTH(CITY) AS LEN
+FROM STATION
+ORDER BY LEN, CITY
+LIMIT 1;
+
+SELECT CITY, LENGTH(CITY) AS LEN
+FROM STATION
+ORDER BY LEN DESC, CITY
+LIMIT 1;
+
+--Weather Observation Station 6--
+SELECT city
+FROM station
+WHERE SUBSTRING(city,1,1) in ('a', 'e', 'i', 'o', 'u');
+
+--Weather Observation Station 7--
+SELECT DISTINCT city
+FROM station
+WHERE SUBSTRING(REVERSE(city),1,1) in ('a', 'e', 'i', 'o', 'u');
+
+--Weather Observation Station 8--
+SELECT DISTINCT city
+FROM station
+WHERE SUBSTRING(REVERSE(city),1,1) in ('a', 'e', 'i', 'o', 'u') AND SUBSTRING(city,1,1) in ('a', 'e', 'i', 'o', 'u');
+
+--Weather Observation Station 9--
+SELECT DISTINCT city
+FROM station
+WHERE SUBSTRING(city,1,1) NOT IN('a', 'e', 'i', 'o', 'u');
+
+--Weather Observation Station 10--
+SELECT DISTINCT city
+FROM station
+WHERE SUBSTRING(REVERSE(city),1,1) NOT IN ('a', 'e', 'i', 'o', 'u');
+
+--Weather Observation Station 11--
+SELECT DISTINCT city
+FROM station
+WHERE SUBSTRING(REVERSE(city),1,1) NOT IN ('a', 'e', 'i', 'o', 'u') OR SUBSTRING(city,1,1) NOT IN ('a', 'e', 'i', 'o', 'u');
+
+--Weather Observation Station 12--
+SELECT DISTINCT city
+FROM station
+WHERE SUBSTRING(REVERSE(city),1,1) NOT IN ('a', 'e', 'i', 'o', 'u') AND SUBSTRING(city,1,1) NOT IN ('a', 'e', 'i', 'o', 'u');
+
+--Weather Observation Station 13--
+select round(sum(lat_n), 4) from station 
+where lat_n > 38.7880 and lat_n < 137.2345;
+
+--Weather Observation Station 14--
+select round(max(lat_n), 4) from station 
+where lat_n < 137.2345;
+
+--Weather Observation Station 15--
+SELECT ROUND(long_w,4) 
+FROM station
+WHERE lat_n < 137.2345
+ORDER BY lat_n DESC
+LIMIT 1;
+
+--Weather Observation Station 16--
+SELECT ROUND(lat_n,4) 
+FROM station
+WHERE lat_n > 38.7780
+ORDER BY lat_n
+LIMIT 1;
+
+--Weather Observation Station 17--
+SELECT ROUND(long_w,4) 
+FROM station
+WHERE lat_n =(SELECT MIN(lat_n) FROM station WHERE lat_n > 38.7780);
+
+--Weather Observation Station 18--
+SELECT ROUND(ABS(MAX(lat_n)-MIN(lat_n)) + ABS(MAX(long_w)-MIN(long_w)),4)
+FROM STATION;
+
+--Weather Observation Station 19--
+SELECT ROUND(SQRT(POWER(MAX(lat_n)-MIN(lat_n),2) + POWER(MAX(long_w)-MIN(long_w),2)),4)
+FROM STATION;
+
+--Higher Than 75 Marks--
+SELECT name
+FROM students
+WHERE marks > 75
+ORDER BY SUBSTRING(name,LENGTH(name)-2,3), ID;
+
+--Employee Names--
+SELECT name
+FROM Employee
+ORDER BY name;
+
+--Employee Salaries--
+SELECT name
+FROM Employee
+WHERE salary > 2000 AND months < 10
+ORDER BY employee_id;
+
+--Type of Triangle--
+SELECT 
+    CASE 
+        WHEN A=B AND B=C THEN 'Equilateral'
+        WHEN A+B<=C OR A+C<=B OR B+C<=A THEN 'Not A Triangle'
+        WHEN A=B OR B=C OR A=C THEN 'Isosceles'
+        ELSE 'Scalene'
+    END AS T
+FROM TRIANGLES;
+
+--Revising Aggregations - The Count Function--
+SELECT COUNT(id)
+FROM city
+WHERE population > 100000;
+
+--The PADS--
+SELECT CONCAT(name,'(',SUBSTRING(occupation,1,1),')') 
+FROM occupations
+ORDER BY name;
+
+SELECT CONCAT('There are a total of ',COUNT(*),' ',LOWER(occupation),'s.')
+FROM occupations
+GROUP BY occupation
+ORDER BY COUNT(*);
+
+--Revising Aggregations - The Sum Function--
+SELECT SUM(population)
+FROM city
+WHERE district = 'California';
+
+--Revising Aggregations - Averages--
+SELECT AVG(population)
+FROM city
+WHERE district = 'California';
+
+--Average Population--
+SELECT ROUND(AVG(population),0)
+FROM city;
+
+--Japan Population--
+SELECT SUM(population)
+FROM city
+WHERE countrycode = 'JPN';
+
+--Population Density Difference--
+SELECT MAX(population) - MIN(population)
+FROM city;
+
+--The Blunder--
+SELECT CEIL(AVG(salary)-AVG(CAST(REPLACE(CAST(salary AS CHAR(20)),'0','') AS UNSIGNED)))
+FROM employees;
+
+--Top Earners--
+SELECT CONCAT(MAX(salary*months),' ',COUNT(*))
+FROM employee
+WHERE (salary*months)=(SELECT MAX(salary*months) FROM  employee);
+
+--Population Census--
+SELECT SUM(city.population)
+FROM CITY JOIN country
+ON CITY.CountryCode = COUNTRY.Code 
+WHERE continent = 'Asia';
+
+--African Cities--
+SELECT city.Name 
+FROM city JOIN country ON city.CountryCode = country.Code 
+WHERE Continent = 'Africa';
+
+--Average Population of Each Continent--
+SELECT continent, FLOOR(AVG(city.population))
+FROM CITY JOIN country
+ON CITY.CountryCode = COUNTRY.Code
+GROUP BY continent;
+
+--The Report--
+SELECT CASE 
+            WHEN (marks DIV 10)+1 < 8 THEN NULL
+            ELSE name
+        END,
+    CASE 
+        WHEN (marks DIV 10)=10 THEN 10
+        ELSE (marks DIV 10)+1
+    END as gr, marks 
+FROM students
+ORDER BY gr DESC, name asc, marks; 
