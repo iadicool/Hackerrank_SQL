@@ -227,3 +227,23 @@ SELECT CASE
     END as gr, marks 
 FROM students
 ORDER BY gr DESC, name asc, marks; 
+
+
+--Top Competitors--
+SELECT s.hacker_id, h.name 
+FROM Submissions s JOIN Challenges c ON s.challenge_id = c.challenge_id JOIN Difficulty d ON c.difficulty_level = d.difficulty_level JOIN Hackers h ON s.hacker_id = h.hacker_id 
+WHERE s.score = d.score
+GROUP BY s.hacker_id, h.name 
+HAVING COUNT(s.hacker_id) > 1 
+ORDER BY COUNT(s.hacker_id) DESC, s.hacker_id ASC
+
+--Draw The Triangle 1--
+SET @lines = 20 + 1;
+
+SELECT REPEAT('* ', @lines := @lines -1) 
+FROM INFORMATION_SCHEMA.TABLES;
+
+
+--Draw The Triangle 2--
+set @row := 0;
+select repeat('* ', @row := @row + 1) from information_schema.tables where @row < 20
